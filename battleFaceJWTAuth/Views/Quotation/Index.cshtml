@@ -1,0 +1,88 @@
+﻿@model battleFaceJWTAuth.Models.QuotationViewModel
+
+@{
+    ViewData["Title"] = "Quoting";
+}
+
+<h1>Quoting</h1>
+
+<h4>Create Quote</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="age" class="control-label"></label>
+                <input id="ageInput" asp-for="age" class="form-control" required />
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="currency_id" class="control-label"></label>
+                <select id="currencyInput" asp-for="currency_id" required
+                        asp-items="@(new SelectList(Model.CurrencyCodes))">
+                    <option>Please select one</option>
+                </select>
+                <span asp-validation-for="currency_id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="start_date" class="control-label"></label>
+                <input id="startDateInput" asp-for="start_date" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+                <span asp-validation-for="start_date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="end_date" class="control-label"></label>
+                <input id="endDateInput" asp-for="end_date" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+                <span asp-validation-for="end_date" class="text-danger"></span>
+            </div>
+          
+        </form>
+        <button id="submitQuoteButton" class="btn btn-primary" onclick="getResult()">Get Quote</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <hr/>
+        <h4>Result</h4>
+        Price: <input id="resultInput" type="number" disabled/>
+        <hr />
+    </div>
+</div>
+        <script type="text/javascript">
+            function getResult() {
+                var package = {
+                    "age": $("#ageInput").val(),
+                    "currency_id": $("#currencyInput").val(),
+                    "start_date": $("#startDateInput").val(),
+                    "end_date": $("#endDateInput").val()
+                };
+                console.log("Running Ajax");
+                console.log(package);
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json',
+                    url: "/quotation",
+                    data: JSON.stringify(package),
+                    processData: false,
+                    success: function (response) {
+                        
+                        $("#resultInput").val(response.total);
+                    },
+                    
+                    error: function (response) {
+                        
+                        var messages = "Validation Errors: ";
+                        for (var idx in response.responseJSON) {
+                            messages += " " + response.responseJSON[idx];
+                        }
+                        alert(messages);
+                    }
+                });
+            }
+
+        </script>
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }

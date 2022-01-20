@@ -60,6 +60,7 @@
   <ItemGroup>
     <Build Include="User_Keys.sql" />
     <Build Include="Users.sql" />
+    <Build Include="Quotes.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="battleFaceUsers.refactorlog" />
