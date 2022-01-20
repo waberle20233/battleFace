@@ -104,7 +104,7 @@ namespace battleFaceJWTAuth.Controllers
             }
             catch(NullReferenceException ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
 
